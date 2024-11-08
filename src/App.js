@@ -1,24 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import Header from "./components/Header";
+import "./App.css";
+import Footer from "./components/Footer";
+import Home from "./components/Home";
+import AdvancedJS from "./components/AdvancedJS";
+import FAQ from "./components/FAQ";
+import Invoice from "./components/Invoice";
+import { HashRouter as HashRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {/*React Fragment: serve as parent component in JSX and doesn't add anything to the DOM */}
+      <HashRouter>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/advancedJS" element={<AdvancedJS />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/invoice" element={<Invoice />} />
+        </Routes>
+        <Footer />
+      </HashRouter>
+    </>
   );
 }
 

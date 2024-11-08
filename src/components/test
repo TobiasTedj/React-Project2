@@ -1,0 +1,139 @@
+import React, { useRef, useState } from "react";
+
+function FormRepairDetail({ passDataToParent }) {
+  // Determine the current date
+  const today = new Date().toLocaleDateString("en-CA");
+
+  const [isWarrantyDisabled, setIsWarrantyDisabled] = useState(false);
+
+  const warrantyRef = useRef();
+
+  const updateWarranty = (value) => {
+    passDataToParent(value); //Child1 (FormCourtesyPhone)
+  };
+
+  //Component UI: HTML Rendering
+  return (
+    <>
+      <h2>Repair Details</h2>
+      <div className="row mt-1">
+        <label class="col-12 col-md-12 col-lg-4">Purchase Date: *</label>
+        <input
+          class="col-12 col-md-12 col-lg-7"
+          type="date"
+          id="purchaseDate"
+          required
+          max={today}
+        />
+      </div>
+      <div className="row mt-1">
+        <label className="col-12 col-md-12 col-lg-4">Repair Date: *</label>
+        <input
+          className="col-12 col-md-12 col-lg-7"
+          type="date"
+          id="repairDate"
+          required
+          min={today}
+        />
+      </div>
+      {/*Under Warranty*/}
+      <div className="row">
+        <fieldset className="border border-primary col-12 col-lg-11 ms-1 me-4 mb-3">
+          <legend className="col-11 float-none w-auto">Under Warranty</legend>
+          {isWarrantyDisabled ? (
+            <p className="text-danger">Phone is out of warranty</p>
+          ) : null}
+          <div>
+            <label className="col-12 col-md-12 col-lg-4">Warranty:</label>
+            <input
+              type="checkbox"
+              ref={warrantyRef}
+              onChange={(event) => updateWarranty(event.target.checked)}
+            />
+          </div>
+        </fieldset>
+      </div>
+      {/*IMEI number*/}
+      <div className="row mt-1">
+        <label className="col-12 col-md-12 col-lg-4">IMEI Number: *</label>
+        <input
+          className="col-12 col-md-12 col-lg-7"
+          type="text"
+          id="imei"
+          required
+          pattern="\d{15}"
+          maxLength="15"
+          title="Must be 15 numbers long."
+        />
+      </div>
+      {/* Make */}
+      <div className="row mt-1">
+        <label for="make" className="col-12 col-md-12 col-lg-4">
+          Make: *
+        </label>
+        <select className="col-12 col-md-12 col-lg-7" id="make" required>
+          <option value="Apple">Apple</option>
+          <option value="LG">LG</option>
+          <option value="Motorola">Motorola</option>
+          <option value="Nokia">Nokia</option>
+          <option value="Samsung">Samsung</option>
+          <option value="Sony">Sony</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      {/* Model */}
+      <div className="row mt-1">
+        <label className="col-12 col-md-12 col-lg-4">Model number:</label>
+        <input
+          className="col-12 col-md-12 col-lg-7"
+          type="text"
+          id="modelNumber"
+        />
+      </div>
+      {/* Fault category */}
+      <div className="row mt-1">
+        <label for="fault" className="col-12 col-md-12 col-lg-4">
+          Fault Category: *
+        </label>
+        <select className="col-12 col-md-12 col-lg-7" id="fault" required>
+          <option value="Battery">Battery</option>
+          <option value="Charging">Charging</option>
+          <option value="Screen">Screen</option>
+          <option value="SD-storage">SD-storage</option>
+          <option value="Software">Software</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      {/* Description */}
+      <div className="row mt-1">
+        <label className="col-12 col-md-12 col-lg-4">Description: *</label>
+        <textarea
+          className="col-12 col-md-12 col-lg-7"
+          id="description"
+          required
+          style={{ minHeight: "100px", maxHeight: "130px" }}
+        />
+      </div>
+    </>
+  );
+}
+
+export default FormRepairDetail;
+
+const handlePurchaseDateChange = (event) => {
+  // Get date from purchase date field
+  const selectedDate = new Date(event.target.value);
+  setPurchaseDate(event.target.value);
+
+  // Calculate 24 months after purchase date
+  const warrantyExpiryDate = new Date(selectedDate); // Temporarily set warranty expiry date as selected purchase date
+  warrantyExpiryDate.setMonth(warrantyExpiryDate.getMonth() + 24); // Add 24 months to selected purchase date
+
+  // Compare with today's date
+  const todayDate = new Date();
+  if (todayDate > warrantyExpiryDate) {
+    setIsWarrantyDisabled(true);
+  } else {
+    setIsWarrantyDisabled(false);
+  }
+};
